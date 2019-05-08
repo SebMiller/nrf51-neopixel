@@ -1,3 +1,5 @@
+Timeslot API method reference: https://devzone.nordicsemi.com/tutorials/b/software-development-kit/posts/setting-up-the-timeslot-api
+
 nrf51-neopixel
 ==============
 
