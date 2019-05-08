@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
+#include "timeslot.h"
 
 
 //These defines are timed specific to a series of if statements and will need to be changed
@@ -98,6 +99,7 @@ void neopixel_init(neopixel_strip_t *strip, uint8_t pin_num, uint16_t num_leds);
   @param[in] pointer to Strip structure
 */
 void neopixel_clear(neopixel_strip_t *strip);
+void neopixel_clear_ty(neopixel_strip_t *strip);
 
 /**
   @brief Update strip with structure data
@@ -130,6 +132,7 @@ uint8_t neopixel_set_color(neopixel_strip_t *strip, uint16_t index, uint8_t red,
   @retval 1 LED number is out of bounds
 */
 uint8_t neopixel_set_color_and_show(neopixel_strip_t *strip, uint16_t index, uint8_t red, uint8_t green, uint8_t blue);
+uint8_t neopixel_set_color_and_show_ty(neopixel_strip_t *strip, uint16_t index, uint8_t red, uint8_t green, uint8_t blue);
 
 /**
   @brief Clears structure data

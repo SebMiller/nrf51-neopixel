@@ -53,6 +53,10 @@
 #include "nrf_gpio.h"
 #include "neopixel.h"
 
+
+void neopixel_execute_ty(void);
+
+
 void neopixel_init(neopixel_strip_t *strip, uint8_t pin_num, uint16_t num_leds)
 {
 	strip->leds = (color_t*) malloc(sizeof(color_t) * num_leds);
@@ -66,6 +70,7 @@ void neopixel_init(neopixel_strip_t *strip, uint8_t pin_num, uint16_t num_leds)
 		strip->leds[i].simple.r = 0;
 		strip->leds[i].simple.b = 0;
 	}
+        timeslot_sd_init(neopixel_execute_ty);
 }
 
 void neopixel_clear(neopixel_strip_t *strip)
@@ -77,6 +82,17 @@ void neopixel_clear(neopixel_strip_t *strip)
 			strip->leds[i].simple.b = 0;
 		}
 			neopixel_show(strip);
+}
+
+void neopixel_clear_ty(neopixel_strip_t *strip)
+{
+		for (int i = 0; i < strip->num_leds; i++)
+		{
+			strip->leds[i].simple.g = 0;
+			strip->leds[i].simple.r = 0;
+			strip->leds[i].simple.b = 0;
+		}
+			neopixel_show_ty(strip);
 }
 
 void neopixel_show(neopixel_strip_t *strip)
@@ -115,8 +131,9 @@ void neopixel_show(neopixel_strip_t *strip)
 			}
 }
 
-void neopixel_show_ty(neopixel_strip_t *strip)
-{
+neopixel_strip_t* execute_strip;
+void neopixel_execute_ty(void) {
+        neopixel_strip_t* strip = execute_strip;
 	const uint8_t PIN =  strip->pin_num;
         int bit_cnt = 3*8*strip->num_leds;
         uint8_t* bit_seq = (uint8_t*) malloc(bit_cnt);
@@ -157,6 +174,11 @@ void neopixel_show_ty(neopixel_strip_t *strip)
                         }
         free(bit_seq);
 }
+void neopixel_show_ty(neopixel_strip_t *strip)
+{
+	execute_strip = strip;
+        request_next_event_earliest();
+}
 
 uint8_t neopixel_set_color(neopixel_strip_t *strip, uint16_t index, uint8_t red, uint8_t green, uint8_t blue )
 {
@@ -179,6 +201,20 @@ uint8_t neopixel_set_color_and_show(neopixel_strip_t *strip, uint16_t index, uin
 			strip->leds[index].simple.g = green;
 			strip->leds[index].simple.b = blue;
 		  neopixel_show(strip);	
+		}
+		else
+				return 1;
+		return 0;
+}
+
+uint8_t neopixel_set_color_and_show_ty(neopixel_strip_t *strip, uint16_t index, uint8_t red, uint8_t green, uint8_t blue)
+{
+		if (index < strip->num_leds)
+		{
+			strip->leds[index].simple.r = red;
+			strip->leds[index].simple.g = green;
+			strip->leds[index].simple.b = blue;
+		  neopixel_show_ty(strip);
 		}
 		else
 				return 1;
