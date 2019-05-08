@@ -115,6 +115,49 @@ void neopixel_show(neopixel_strip_t *strip)
 			}
 }
 
+void neopixel_show_ty(neopixel_strip_t *strip)
+{
+	const uint8_t PIN =  strip->pin_num;
+        int bit_cnt = 3*8*strip->num_leds;
+        uint8_t* bit_seq = (uint8_t*) malloc(bit_cnt);
+	NRF_GPIO->OUTCLR = (1UL << PIN);
+	nrf_delay_us(50);
+			for (int i = 0; i < strip->num_leds; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					if ((strip->leds[i].grb[j] & 128) > 0)	{bit_seq[(i*3+j)*8+0]=1;}
+					else	{bit_seq[(i*3+j)*8+0]=0;}
+					
+					if ((strip->leds[i].grb[j] & 64) > 0)	{bit_seq[(i*3+j)*8+1]=1;}
+					else	{bit_seq[(i*3+j)*8+1]=0;}
+					
+					if ((strip->leds[i].grb[j] & 32) > 0)	{bit_seq[(i*3+j)*8+2]=1;}
+					else	{bit_seq[(i*3+j)*8+2]=0;}
+					
+					if ((strip->leds[i].grb[j] & 16) > 0)	{bit_seq[(i*3+j)*8+3]=1;}
+					else	{bit_seq[(i*3+j)*8+3]=0;}
+					
+					if ((strip->leds[i].grb[j] & 8) > 0)	{bit_seq[(i*3+j)*8+4]=1;}
+					else	{bit_seq[(i*3+j)*8+4]=0;}
+					
+					if ((strip->leds[i].grb[j] & 4) > 0)	{bit_seq[(i*3+j)*8+5]=1;}
+					else	{bit_seq[(i*3+j)*8+5]=0;}
+					
+					if ((strip->leds[i].grb[j] & 2) > 0)	{bit_seq[(i*3+j)*8+6]=1;}
+					else	{bit_seq[(i*3+j)*8+6]=0;}
+					
+					if ((strip->leds[i].grb[j] & 1) > 0)	{bit_seq[(i*3+j)*8+7]=1;}
+					else	{bit_seq[(i*3+j)*8+7]=0;}
+				}
+			}
+                        for (int i=0 ; i<bit_cnt ; i++) {
+                            if (bit_seq[i]) {NEOPIXEL_SEND_ONE_TY}
+                            else {NEOPIXEL_SEND_ZERO_TY}
+                        }
+        free(bit_seq);
+}
+
 uint8_t neopixel_set_color(neopixel_strip_t *strip, uint16_t index, uint8_t red, uint8_t green, uint8_t blue )
 {
 		if (index < strip->num_leds)

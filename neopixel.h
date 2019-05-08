@@ -22,7 +22,7 @@
 				" NOP\n\t" \
 				" NOP\n\t" \
 			); \
-		NRF_GPIO->OUTCLR = (1UL << PIN); \
+		NRF_GPIO->OUTCLR = (1UL << PIN);
 
 #define NEOPIXEL_SEND_ZERO NRF_GPIO->OUTSET = (1UL << PIN); \
 		__ASM (  \
@@ -39,7 +39,39 @@
 				" NOP\n\t" \
 				" NOP\n\t" \
 			);
-		
+
+
+#define NEOPIXEL_SEND_ONE_TY	NRF_GPIO->OUTSET = (1UL << 6); \
+		__ASM ( \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+			); \
+		NRF_GPIO->OUTCLR = (1UL << 6); \
+		__ASM (  \
+				" NOP\n\t"  \
+			);
+
+#define NEOPIXEL_SEND_ZERO_TY NRF_GPIO->OUTSET = (1UL << 6); \
+		__ASM (  \
+				" NOP\n\t"  \
+				" NOP\n\t"  \
+				" NOP\n\t"  \
+			);  \
+		NRF_GPIO->OUTCLR = (1UL << 6);  \
+		__ASM ( \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+				" NOP\n\t" \
+			);
+
+
 extern void nrf_delay_us(uint32_t volatile number_of_us);
 typedef union {
 		struct {
@@ -72,6 +104,7 @@ void neopixel_clear(neopixel_strip_t *strip);
   @param[in] pointer to Strip structure
 */
 void neopixel_show(neopixel_strip_t *strip);
+void neopixel_show_ty(neopixel_strip_t *strip);
 
 /**
   @brief Write RGB value to LED structure
